@@ -8,18 +8,14 @@ exports.getProducts = (req, res, next) => {
       docTitle: "All products",
       path: "/products",
       hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
     });
   });
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  // console.log("productId", prodId);
 
   Product.findById(prodId, (product) => {
-    // console.log("object", product);
     res.render("shop/product-detail", {
       docTitle: product.title,
       product: product,
@@ -35,21 +31,30 @@ exports.getIndex = (req, res, next) => {
       docTitle: "Shop",
       path: "/",
       hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
     });
   });
 };
 
 exports.getCart = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/cart", {
-      //   prods: products,
-      docTitle: "Your cart",
-      path: "/cart",
-      hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
+  Cart.getCart((cart) => {
+    Product.fetchAll((allProducts) => {
+      const productsInCart = [];
+      for (const product of allProducts) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          productsInCart.push({
+            productData: product,
+            qty: cartProductData.qty,
+          });
+        }
+      }
+      res.render("shop/cart", {
+        docTitle: "Your cart",
+        path: "/cart",
+        products: productsInCart,
+      });
     });
   });
 };
@@ -67,12 +72,9 @@ exports.postCart = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
   Product.fetchAll((products) => {
     res.render("shop/checkout", {
-      //   prods: products,
       docTitle: "Checkout",
       path: "/checkout",
       hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
     });
   });
 };
@@ -80,12 +82,9 @@ exports.getCheckout = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
   Product.fetchAll((products) => {
     res.render("shop/orders", {
-      //   prods: products,
       docTitle: "Your Orders",
       path: "/orders",
       hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
     });
   });
 };
