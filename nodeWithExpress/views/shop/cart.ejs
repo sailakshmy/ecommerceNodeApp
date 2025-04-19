@@ -5,12 +5,11 @@
         <ul>
             <% products.forEach(product => { %>
                 <li>
-                    <h5><%= product.productData.title %> (<%= product.qty %>)</h5>
-                    <form action="/cart/remove/<%= product.id %>" method="POST">
-                        <input type="hidden" name="productId" value="<%= product.productData.id %>">
-                        <input type="hidden" name="quantity" value="<%= product.qty %>">
-                        <input type="hidden" name="price" value="<%= product.productData.price %>">
-                        <button type="submit">Remove from cart</button>
+                    <p><%= product.productData.title %> (<%= product.qty %>)</p>
+                    <form action="/cart-delete-item %>" method="POST">
+                        <input type="hidden" name="productId" value="<%= product.productData.id %>" />
+                        <input type="hidden" name="quantity" value="<%= product.qty %>"/>
+                        <button type="submit" class="btn">Remove from cart</button>
                     </form>
                 </li>
             <% }) %>
