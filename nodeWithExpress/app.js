@@ -1,26 +1,24 @@
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-// const expressHbs = require("express-handlebars");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
+const db = require("./utils/database");
 
 const app = express();
 
-app.set("view engine", "ejs");
-// app.engine(
-//   "handlebars",
-//   expressHbs({
-//     layoutsDir: "views/layouts/",
-//     defaultLayout: "main-layout",
-//     extname: "handlebars",
-//   })
-// );
-// app.set("view engine", "handlebars");
+db.execute("SELECT * FROM  products")
+  .then((res) => {
+    console.log("res", res[0], res[1]);
+  })
+  .catch((err) => {
+    console.log("err", err);
+  });
 
-// app.set("view engine", "pug");
+app.set("view engine", "ejs");
+
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded());
