@@ -40,6 +40,28 @@ module.exports = class Product {
     });
   }
 
+  static deleteById(id) {
+    getProductsFromFile((products) => {
+      // easier logic
+      const updatedProducts = products.filter((p) => p.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (!err) {
+        }
+        console.log(err);
+      });
+
+      // my logic
+      // const product = products.find((p) => p.id === id);
+      // if (!product) {
+      //   return;
+      // }
+      // const updatedProducts = products.filter((p) => p.id !== id);
+      // fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+      //   console.log(err);
+      // });
+    });
+  }
+
   static fetchAll(cb) {
     getProductsFromFile(cb);
   }
