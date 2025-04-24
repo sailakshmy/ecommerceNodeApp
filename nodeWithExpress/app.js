@@ -9,13 +9,13 @@ const db = require("./utils/database");
 
 const app = express();
 
-db.execute("SELECT * FROM  products")
-  .then((res) => {
-    console.log("res", res[0], res[1]);
-  })
-  .catch((err) => {
-    console.log("err", err);
-  });
+// db.execute("SELECT * FROM  products")
+//   .then((res) => {
+//     console.log("res", res[0], res[1]);
+//   })
+//   .catch((err) => {
+//     console.log("err", err);
+//   });
 
 app.set("view engine", "ejs");
 
