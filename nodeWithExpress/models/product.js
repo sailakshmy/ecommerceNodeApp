@@ -41,6 +41,10 @@ module.exports = class Product {
     //     });
     //   }
     // });
+    return db.execute(
+      "INSERT INTO products (title, price,imageUrl, description) VALUES (?,?,?,?)",
+      [this.title, this.price, this.imageUrl, this.description]
+    );
   }
 
   static deleteById() {
@@ -68,7 +72,7 @@ module.exports = class Product {
 
   static fetchAll() {
     // getProductsFromFile(cb);
-    return db.query("SELECT * FROM products");
+    return db.execute("SELECT * FROM products");
   }
 
   static findById(id) {

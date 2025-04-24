@@ -13,8 +13,12 @@ exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect("/admin/products");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch((e) => console.log("e", e));
 };
 
 exports.getEditProduct = (req, res, next) => {
