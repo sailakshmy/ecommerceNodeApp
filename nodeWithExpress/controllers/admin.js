@@ -73,14 +73,25 @@ exports.postDeleteProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("admin/products", {
-      prods: products,
-      docTitle: "Admin products",
-      path: "/admin/products",
-      hasProducts: products.length > 0,
-      //   activeShop: true,
-      //   productCSS: true,
-    });
-  });
+  // Product.fetchAll((products) => {
+  //   res.render("admin/products", {
+  //     prods: products,
+  //     docTitle: "Admin products",
+  //     path: "/admin/products",
+  //     hasProducts: products.length > 0,
+  //     //   activeShop: true,
+  //     //   productCSS: true,
+  //   });
+  // });
+  Product.findAll()
+    .then((products) => {
+      console.log("res from getProducts", products);
+      res.render("admin/products", {
+        prods: products,
+        docTitle: "Admin products",
+        path: "/admin/products",
+        // hasProducts: products.length > 0,
+      });
+    })
+    .catch((e) => console.log("error from getProducts", e));
 };
