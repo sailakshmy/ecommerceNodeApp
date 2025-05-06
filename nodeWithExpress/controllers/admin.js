@@ -12,13 +12,25 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
-  const product = new Product(null, title, imageUrl, description, price);
-  product
-    .save()
-    .then(() => {
-      res.redirect("/products");
+  // const product = new Product(null, title, imageUrl, description, price);
+  // product
+  //   .save()
+  //   .then(() => {
+  //     res.redirect("/products");
+  //   })
+  //   .catch((e) => console.log("e", e));
+  Product.create({
+    title,
+    description,
+    imageUrl,
+    price,
+  })
+    .then((result) => {
+      // res.redirect("/products");
+      // console.log("result from postAddProduct", result);
+      console.log("Created product from postAddProduct");
     })
-    .catch((e) => console.log("e", e));
+    .catch((e) => console.log("e from postAddProduct", e));
 };
 
 exports.getEditProduct = (req, res, next) => {
