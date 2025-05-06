@@ -44,11 +44,30 @@ exports.getProduct = (req, res, next) => {
   //     path: "/products",
   //   });
   // });
-  Product.findById(prodId)
-    .then(([row]) => {
+  // Product.findById(prodId)
+  //   .then(([row]) => {
+  //     res.render("shop/product-detail", {
+  //       docTitle: row?.[0].title,
+  //       product: row?.[0],
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((e) => console.log("err", e));
+  // Product.findByPk(prodId)
+  //   .then((product) => {
+  //     res.render("shop/product-detail", {
+  //       docTitle: product.title,
+  //       product: product,
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((e) => console.log("err", e));
+
+  Product.findAll({ where: { id: prodId } })
+    .then((products) => {
       res.render("shop/product-detail", {
-        docTitle: row?.[0].title,
-        product: row?.[0],
+        docTitle: products?.[0].title,
+        product: products?.[0],
         path: "/products",
       });
     })
