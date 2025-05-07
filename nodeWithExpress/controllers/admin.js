@@ -40,30 +40,55 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findById(prodId, (product) => {
-    if (!product) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      docTitle: "Edit Products",
-      path: "/admin/edit-product",
-      editing: editMode === "true" ? true : false,
-      product: product,
-    });
-  });
+  // Product.findById(prodId, (product) => {
+  //   if (!product) {
+  //     return res.redirect("/");
+  //   }
+  //   res.render("admin/edit-product", {
+  //     docTitle: "Edit Products",
+  //     path: "/admin/edit-product",
+  //     editing: editMode === "true" ? true : false,
+  //     product: product,
+  //   });
+  // });
+
+  Product.findByPk(prodId)
+    .then((product) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        docTitle: "Edit Products",
+        path: "/admin/edit-product",
+        editing: editMode === "true" ? true : false,
+        product: product,
+      });
+    })
+    .catch((e) => console.log("e while editing", e));
 };
 
 exports.postEditProduct = (req, res, next) => {
   const { productId, title, imageUrl, description, price } = req.body;
-  const updatedProduct = new Product(
-    productId,
-    title,
-    imageUrl,
-    description,
-    price
-  );
-  updatedProduct.save();
-  res.redirect("/admin/products");
+  // const updatedProduct = new Product(
+  //   productId,
+  //   title,
+  //   imageUrl,
+  //   description,
+  //   price
+  // );
+  // updatedProduct.save();
+  Product.findByPk(productId)
+    .then((product) => {
+      product.title = title;
+      product.imageUrl = imageUrl;
+      product.description = description;
+      product.price = price;
+      return product.save();
+    })
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((e) => console.log("err while saving edit", e));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
