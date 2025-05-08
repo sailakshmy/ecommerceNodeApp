@@ -7,6 +7,9 @@ const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 // const db = require("./utils/database");
 const sequelize = require("./utils/database");
+const Product = require("./models/product");
+const User = require("./models/user");
+
 const app = express();
 
 // db.execute("SELECT * FROM  products")
@@ -30,8 +33,16 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+// Sequelize Associations
+Product.belongsTo(User, {
+  constraints: true,
+  onDelete: "CASCADE",
+});
+
+User.hasMany(Product);
+
 sequelize
-  .sync()
+  .sync({ force: true })
   .then((result) => {
     // console.log("res", result);
     app.listen(3000);
