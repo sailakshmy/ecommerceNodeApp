@@ -19,12 +19,20 @@ exports.postAddProduct = (req, res, next) => {
   //     res.redirect("/products");
   //   })
   //   .catch((e) => console.log("e", e));
-  Product.create({
-    title,
-    description,
-    imageUrl,
-    price,
-  })
+
+  req.user
+    .createProduct({
+      title,
+      description,
+      imageUrl,
+      price,
+    })
+    // Product.create({
+    //   title,
+    //   description,
+    //   imageUrl,
+    //   price,
+    // })
     .then(() => {
       // console.log("result from postAddProduct", result);
       console.log("Created product from postAddProduct");
