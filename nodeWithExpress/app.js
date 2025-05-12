@@ -9,6 +9,8 @@ const errorController = require("./controllers/error");
 const sequelize = require("./utils/database");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 const app = express();
 
@@ -47,12 +49,22 @@ Product.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
 });
-
+// A user can have many products
 User.hasMany(Product);
 
+// A user can have one cart
+User.hasOne(Cart);
+// Cart.belongsTo(User); // Optional.
+
+// A Cart can belong to many Products
+Cart.belongsToMany(Product, { through: CartItem });
+
+// A product can belong to multiple carts
+Product.belongsToMany(Cart, { through: CartItem });
+
 sequelize
-  // .sync({force: true})
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((result) => {
     // console.log("res", result);
     // app.listen(3000);
