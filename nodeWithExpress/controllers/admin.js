@@ -12,14 +12,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
-  // const product = new Product(null, title, imageUrl, description, price);
-  // product
-  //   .save()
-  //   .then(() => {
-  //     res.redirect("/products");
-  //   })
-  //   .catch((e) => console.log("e", e));
-
+  // This is to create a product based on the current user and update the user Id in the product column. Possible because we have defined the association in app.js
   req.user
     .createProduct({
       title,
@@ -43,25 +36,16 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
-  console.log("Edit mode: ", editMode);
+  // console.log("Edit mode: ", editMode);
   if (!editMode) {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  // Product.findById(prodId, (product) => {
-  //   if (!product) {
-  //     return res.redirect("/");
-  //   }
-  //   res.render("admin/edit-product", {
-  //     docTitle: "Edit Products",
-  //     path: "/admin/edit-product",
-  //     editing: editMode === "true" ? true : false,
-  //     product: product,
-  //   });
-  // });
-
-  Product.findByPk(prodId)
-    .then((product) => {
+  req.user
+    .getProducts({ where: { id: prodId } })
+    // Product.findByPk(prodId)
+    .then((products) => {
+      const product = products?.[0];
       if (!product) {
         return res.redirect("/");
       }
@@ -77,14 +61,7 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const { productId, title, imageUrl, description, price } = req.body;
-  // const updatedProduct = new Product(
-  //   productId,
-  //   title,
-  //   imageUrl,
-  //   description,
-  //   price
-  // );
-  // updatedProduct.save();
+
   Product.findByPk(productId)
     .then((product) => {
       product.title = title;
@@ -101,12 +78,6 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const { productId } = req.body;
-  // Product.deleteById(productId);
-  // Product.destroy({
-  //   where: {
-  //     id: productId,
-  //   },
-  // });
 
   Product.findByPk(productId)
     .then((product) => product.destroy())
@@ -115,17 +86,9 @@ exports.postDeleteProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  // Product.fetchAll((products) => {
-  //   res.render("admin/products", {
-  //     prods: products,
-  //     docTitle: "Admin products",
-  //     path: "/admin/products",
-  //     hasProducts: products.length > 0,
-  //     //   activeShop: true,
-  //     //   productCSS: true,
-  //   });
-  // });
-  Product.findAll()
+  // Product.findAll()
+  req.user
+    .getProducts()
     .then((products) => {
       console.log("res from getProducts", products);
       res.render("admin/products", {
