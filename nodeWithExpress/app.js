@@ -63,8 +63,8 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then((result) => {
     // console.log("res", result);
     // app.listen(3000);
@@ -73,12 +73,17 @@ sequelize
   .then((user) => {
     console.log("user before", user);
     if (!user) {
+      // Creating a dummy user
       return User.create({ name: "abc", email: "abc@test.com" });
     }
     return user;
   })
   .then((user) => {
+    // Creating a dummy cart
+    return user.createCart();
     // console.log("user", user);
+  })
+  .then(() => {
     app.listen(3000);
   })
   .catch((e) => {
