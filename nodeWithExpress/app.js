@@ -26,7 +26,7 @@ app.set("view engine", "ejs");
 
 app.set("views", "views");
 
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -54,7 +54,7 @@ User.hasMany(Product);
 
 // A user can have one cart
 User.hasOne(Cart);
-// Cart.belongsTo(User); // Optional.
+Cart.belongsTo(User);
 
 // A Cart can belong to many Products
 Cart.belongsToMany(Product, { through: CartItem });
