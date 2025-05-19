@@ -1,4 +1,3 @@
-const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
@@ -224,6 +223,32 @@ exports.getCheckout = (req, res, next) => {
       hasProducts: products.length > 0,
     });
   });
+};
+
+exports.postOrder = (req, res, next) => {
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts();
+    })
+    .then((products) => {
+      console.log("Products in postOrder", products);
+      return req.user
+        .createOrder()
+        .then((order) => {
+          return order.addProducts(
+            products.map((product) => {
+              product.orderItem = {
+                quantity: product.cartItem.quantity,
+              };
+              return product;
+            })
+          );
+        })
+        .then(() => res.redirect("/orders"))
+        .catch((e) => console.log("Err in createOrder from postOrder", e));
+    })
+    .catch((e) => console.log("err in postOrder", e));
 };
 
 exports.getOrders = (req, res, next) => {
