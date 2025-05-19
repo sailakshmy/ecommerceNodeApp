@@ -226,9 +226,11 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
+  let fetchedCart;
   req.user
     .getCart()
     .then((cart) => {
+      fetchedCart = cart;
       return cart.getProducts();
     })
     .then((products) => {
@@ -245,18 +247,26 @@ exports.postOrder = (req, res, next) => {
             })
           );
         })
-        .then(() => res.redirect("/orders"))
+        .then(() => fetchedCart.setProducts(null))
+        .then((result) => {
+          res.redirect("/orders");
+        })
         .catch((e) => console.log("Err in createOrder from postOrder", e));
     })
     .catch((e) => console.log("err in postOrder", e));
 };
 
 exports.getOrders = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/orders", {
-      docTitle: "Your Orders",
-      path: "/orders",
-      hasProducts: products.length > 0,
-    });
-  });
+  req.user
+    .getOrders({ include: ["products"] })
+    .then((orders) => {
+      console.log("orders from getOrders", orders);
+      res.render("shop/orders", {
+        docTitle: "Your Orders",
+        path: "/orders",
+        orders: orders,
+        // hasProducts: products.length > 0,
+      });
+    })
+    .catch((e) => console.log("err in getOrders", e));
 };
