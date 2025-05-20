@@ -1,6 +1,16 @@
 const Product = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      res.render("shop/product-list", {
+        prods: products,
+        docTitle: "All products",
+        path: "/products",
+        hasProducts: products.length > 0,
+      });
+    })
+    .catch((err) => console.log("error while fetching all products", err));
   // Product.fetchAll((products) => {
   //   res.render("shop/product-list", {
   //     prods: products,
@@ -20,17 +30,17 @@ exports.getProducts = (req, res, next) => {
   //   })
   //   .catch((err) => console.log(err));
 
-  Product.findAll()
-    .then((products) => {
-      console.log("res from getProducts", products);
-      res.render("shop/product-list", {
-        prods: products,
-        docTitle: "All products",
-        path: "/products",
-        // hasProducts: rows.length > 0,
-      });
-    })
-    .catch((e) => console.log("error from getProducts", e));
+  // Product.findAll()
+  //   .then((products) => {
+  //     console.log("res from getProducts", products);
+  //     res.render("shop/product-list", {
+  //       prods: products,
+  //       docTitle: "All products",
+  //       path: "/products",
+  //       // hasProducts: rows.length > 0,
+  //     });
+  //   })
+  //   .catch((e) => console.log("error from getProducts", e));
 };
 
 exports.getProduct = (req, res, next) => {
@@ -74,6 +84,17 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      console.log("res from getindex", products);
+      res.render("shop/index", {
+        prods: products,
+        docTitle: "Shop",
+        path: "/",
+        // hasProducts: products.length > 0,
+      });
+    })
+    .catch((e) => console.log("error from getIndex", e));
   // Product.fetchAll((products) => {
   //   res.render("shop/index", {
   //     prods: products,
@@ -92,17 +113,17 @@ exports.getIndex = (req, res, next) => {
   //     });
   //   })
   //   .catch((err) => console.log(err));
-  Product.findAll()
-    .then((products) => {
-      console.log("res from getindex", products);
-      res.render("shop/index", {
-        prods: products,
-        docTitle: "Shop",
-        path: "/",
-        // hasProducts: products.length > 0,
-      });
-    })
-    .catch((e) => console.log("error from getIndex", e));
+  // Product.findAll()
+  //   .then((products) => {
+  //     console.log("res from getindex", products);
+  //     res.render("shop/index", {
+  //       prods: products,
+  //       docTitle: "Shop",
+  //       path: "/",
+  //       // hasProducts: products.length > 0,
+  //     });
+  //   })
+  //   .catch((e) => console.log("error from getIndex", e));
 };
 
 exports.getCart = (req, res, next) => {

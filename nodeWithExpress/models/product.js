@@ -18,6 +18,19 @@ class Product {
       })
       .catch((e) => console.log("error while inserting product into DB", e));
   }
+
+  static fetchAll() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find()
+      .toArray()
+      .then((products) => {
+        console.log("products after fetching all products", products);
+        return products;
+      })
+      .catch((err) => console.log("error while fetching all products", err));
+  }
 }
 
 module.exports = Product;
