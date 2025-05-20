@@ -46,6 +46,16 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
 
+  Product.findById(prodId)
+    .then((product) => {
+      res.render("shop/product-detail", {
+        docTitle: product?.title,
+        product: product,
+        path: "/products",
+      });
+    })
+    .catch((e) => console.log("err", e));
+
   // Product.findById(prodId, (product) => {
   //   res.render("shop/product-detail", {
   //     docTitle: product.title,
@@ -72,15 +82,15 @@ exports.getProduct = (req, res, next) => {
   //   })
   //   .catch((e) => console.log("err", e));
 
-  Product.findAll({ where: { id: prodId } })
-    .then((products) => {
-      res.render("shop/product-detail", {
-        docTitle: products?.[0].title,
-        product: products?.[0],
-        path: "/products",
-      });
-    })
-    .catch((e) => console.log("err", e));
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products) => {
+  //     res.render("shop/product-detail", {
+  //       docTitle: products?.[0].title,
+  //       product: products?.[0],
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((e) => console.log("err", e));
 };
 
 exports.getIndex = (req, res, next) => {
