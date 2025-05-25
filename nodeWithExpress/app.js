@@ -32,7 +32,9 @@ app.use((req, res, next) => {
   User.findById("6832be58544f99aa34f0ab9e")
     .then((user) => {
       console.log("Found a user", user);
-      req.user = user;
+      const { name, email, cart, _id } = user;
+      req.user = new User(name, email, cart, _id);
+
       next();
     })
     .catch((err) => console.log("error while finding user", err));
