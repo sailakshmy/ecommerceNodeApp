@@ -317,15 +317,25 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
   req.user
-    .getOrders({ include: ["products"] })
+    .getOrders()
     .then((orders) => {
-      console.log("orders from getOrders", orders);
       res.render("shop/orders", {
         docTitle: "Your Orders",
         path: "/orders",
         orders: orders,
-        // hasProducts: products.length > 0,
       });
     })
     .catch((e) => console.log("err in getOrders", e));
+  // req.user
+  //   .getOrders({ include: ["products"] })
+  //   .then((orders) => {
+  //     console.log("orders from getOrders", orders);
+  //     res.render("shop/orders", {
+  //       docTitle: "Your Orders",
+  //       path: "/orders",
+  //       orders: orders,
+  //       // hasProducts: products.length > 0,
+  //     });
+  //   })
+  //   .catch((e) => console.log("err in getOrders", e));
 };

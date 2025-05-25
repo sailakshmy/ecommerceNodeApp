@@ -104,10 +104,14 @@ class User {
       .catch((e) => console.log("error while creating an order", e));
   }
 
-  // getOrders() {
-  //   const db = getDb();
-  //   return db.collection("orders").then();
-  // }
+  getOrders() {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .find({ "user._id": new mongodb.ObjectId(this._id) })
+      .toArray()
+      .catch((e) => console.log("error while fetching orders", e));
+  }
 
   static findById(userId) {
     const db = getDb();
