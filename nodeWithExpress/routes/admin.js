@@ -16,5 +16,3 @@ router.post("/delete-product", adminController.postDeleteProduct);
 router.get("/products", adminController.getProducts);
 
 module.exports = router;
-// exports.routes = router;m
-// exports.products = products;

@@ -22,24 +22,10 @@ exports.postAddProduct = (req, res, next) => {
     null,
     req.user._id
   );
-  // // This is to create a product based on the current user and update the user Id in the product column. Possible because we have defined the association in app.js
-  // req.user
-  //   .createProduct({
-  //     title,
-  //     description,
-  //     imageUrl,
-  //     price,
-  //   })
-  // Product.create({
-  //   title,
-  //   description,
-  //   imageUrl,
-  //   price,
-  // })
+
   product
     .save()
     .then(() => {
-      // console.log("result from postAddProduct", result);
       console.log("Created product from postAddProduct");
       res.redirect("/admin/products");
     })
@@ -48,17 +34,14 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
-  // console.log("Edit mode: ", editMode);
+
   if (!editMode) {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  // req.user
-  //   .getProducts({ where: { id: prodId } })
-  // Product.findByPk(prodId)
+
   Product.findById(prodId)
     .then((product) => {
-      // const product = products?.[0];
       if (!product) {
         return res.redirect("/");
       }
@@ -83,19 +66,6 @@ exports.postEditProduct = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((e) => console.log("err while saving edit", e));
-
-  // Product.findByPk(productId)
-  //   .then((product) => {
-  //     product.title = title;
-  //     product.imageUrl = imageUrl;
-  //     product.description = description;
-  //     product.price = price;
-  //     return product.save();
-  //   })
-  //   .then(() => {
-  //     res.redirect("/admin/products");
-  //   })
-  //   .catch((e) => console.log("err while saving edit", e));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -103,11 +73,6 @@ exports.postDeleteProduct = (req, res, next) => {
   Product.deleteById(productId)
     .then(() => res.redirect("/admin/products"))
     .catch((e) => console.log("err while deleting product from controller", e));
-
-  // Product.findByPk(productId)
-  //   .then((product) => product.destroy())
-  //   .then(() => res.redirect("/admin/products"))
-  //   .catch((e) => console.log("err while deleting product", e));
 };
 
 exports.getProducts = (req, res, next) => {
@@ -118,21 +83,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         docTitle: "Admin products",
         path: "/admin/products",
-        // hasProducts: products.length > 0,
       });
     })
     .catch((e) => console.log("error from getProducts", e));
-  // Product.findAll()
-  // req.user
-  //   .getProducts()
-  //   .then((products) => {
-  //     console.log("res from getProducts", products);
-  //     res.render("admin/products", {
-  //       prods: products,
-  //       docTitle: "Admin products",
-  //       path: "/admin/products",
-  //       // hasProducts: products.length > 0,
-  //     });
-  //   })
-  //   .catch((e) => console.log("error from getProducts", e));
 };
