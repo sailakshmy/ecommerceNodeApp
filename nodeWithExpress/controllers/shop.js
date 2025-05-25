@@ -137,26 +137,37 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  // console.log("req.user.cart", req.user.cart);
   req.user
     .getCart()
-    .then((cart) => {
-      console.log("cart", cart);
-      return cart
-        .getProducts()
-        .then((products) => {
-          console.log("Products in getProducts from getCart", products);
-          res.render("shop/cart", {
-            docTitle: "Your cart",
-            path: "/cart",
-            products: products,
-          });
-        })
-        .catch((err) => {
-          console.log("error in getProducts from getCart", err);
-        });
+    .then((products) => {
+      console.log("Products in getProducts from getCart", products);
+      res.render("shop/cart", {
+        docTitle: "Your cart",
+        path: "/cart",
+        products: products,
+      });
     })
     .catch((err) => console.log("error in getCart", err));
+  // console.log("req.user.cart", req.user.cart);
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     console.log("cart", cart);
+  //     return cart
+  //       .getProducts()
+  //       .then((products) => {
+  //         console.log("Products in getProducts from getCart", products);
+  //         res.render("shop/cart", {
+  //           docTitle: "Your cart",
+  //           path: "/cart",
+  //           products: products,
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log("error in getProducts from getCart", err);
+  //       });
+  //   })
+  //   .catch((err) => console.log("error in getCart", err));
   // Cart.getCart((cart) => {
   //   Product.fetchAll((allProducts) => {
   //     const productsInCart = [];
