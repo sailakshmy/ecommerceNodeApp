@@ -244,22 +244,26 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const { productId } = req.body;
-
   req.user
-    .getCart()
-    .then((cart) => {
-      return cart.getProducts({
-        where: {
-          id: productId,
-        },
-      });
-    })
-    .then((products) => {
-      const product = products?.[0];
-      return product.cartItem.destroy();
-    })
+    .deleteProductFromCart(productId)
     .then(() => res.redirect("/cart"))
-    .catch();
+    .catch((e) => console.log("error while deleting item from the cart", e));
+
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     return cart.getProducts({
+  //       where: {
+  //         id: productId,
+  //       },
+  //     });
+  //   })
+  //   .then((products) => {
+  //     const product = products?.[0];
+  //     return product.cartItem.destroy();
+  //   })
+  //   .then(() => res.redirect("/cart"))
+  //   .catch();
   // Product.findById(productId, (product) => {
   //   Cart.deleteProduct(productId, product.price);
   //   res.redirect("/cart");
