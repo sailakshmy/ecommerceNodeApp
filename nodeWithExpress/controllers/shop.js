@@ -281,34 +281,38 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  let fetchedCart;
   req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return cart.getProducts();
-    })
-    .then((products) => {
-      console.log("Products in postOrder", products);
-      return req.user
-        .createOrder()
-        .then((order) => {
-          return order.addProducts(
-            products.map((product) => {
-              product.orderItem = {
-                quantity: product.cartItem.quantity,
-              };
-              return product;
-            })
-          );
-        })
-        .then(() => fetchedCart.setProducts(null))
-        .then((result) => {
-          res.redirect("/orders");
-        })
-        .catch((e) => console.log("Err in createOrder from postOrder", e));
-    })
-    .catch((e) => console.log("err in postOrder", e));
+    .addOrder()
+    .then(() => res.redirect("/orders"))
+    .catch((e) => console.log("error in postOrder", e));
+  // let fetchedCart;
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     fetchedCart = cart;
+  //     return cart.getProducts();
+  //   })
+  //   .then((products) => {
+  //     console.log("Products in postOrder", products);
+  //     return req.user
+  //       .createOrder()
+  //       .then((order) => {
+  //         return order.addProducts(
+  //           products.map((product) => {
+  //             product.orderItem = {
+  //               quantity: product.cartItem.quantity,
+  //             };
+  //             return product;
+  //           })
+  //         );
+  //       })
+  //       .then(() => fetchedCart.setProducts(null))
+  //       .then((result) => {
+  //         res.redirect("/orders");
+  //       })
+  //       .catch((e) => console.log("Err in createOrder from postOrder", e));
+  //   })
+  //   .catch((e) => console.log("err in postOrder", e));
 };
 
 exports.getOrders = (req, res, next) => {
