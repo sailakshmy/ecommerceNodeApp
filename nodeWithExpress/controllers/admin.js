@@ -89,18 +89,29 @@ exports.postAddProduct = (req, res, next) => {
 //     .catch((e) => console.log("err while deleting product", e));
 // };
 
-// exports.getProducts = (req, res, next) => {
-//   // Product.findAll()
-//   req.user
-//     .getProducts()
-//     .then((products) => {
-//       console.log("res from getProducts", products);
-//       res.render("admin/products", {
-//         prods: products,
-//         docTitle: "Admin products",
-//         path: "/admin/products",
-//         // hasProducts: products.length > 0,
-//       });
-//     })
-//     .catch((e) => console.log("error from getProducts", e));
-// };
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      console.log("res from getProducts", products);
+      res.render("admin/products", {
+        prods: products,
+        docTitle: "Admin products",
+        path: "/admin/products",
+        // hasProducts: products.length > 0,
+      });
+    })
+    .catch((e) => console.log("error from getProducts", e));
+  // Product.findAll()
+  // req.user
+  //   .getProducts()
+  //   .then((products) => {
+  //     console.log("res from getProducts", products);
+  //     res.render("admin/products", {
+  //       prods: products,
+  //       docTitle: "Admin products",
+  //       path: "/admin/products",
+  //       // hasProducts: products.length > 0,
+  //     });
+  //   })
+  //   .catch((e) => console.log("error from getProducts", e));
+};
