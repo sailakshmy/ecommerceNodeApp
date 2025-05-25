@@ -197,7 +197,10 @@ exports.postCart = (req, res, next) => {
     .then((product) => {
       return req.user.addToCart(product);
     })
-    .then((res) => console.log("result from postCart", res))
+    .then((result) => {
+      console.log("result from postCart", result);
+      res.redirect("/cart");
+    })
     .catch((e) => console.log("error in postCart method", e));
   // let fetchedCart;
   // let newQuantity = 1;
