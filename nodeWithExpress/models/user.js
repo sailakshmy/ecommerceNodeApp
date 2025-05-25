@@ -1,4 +1,4 @@
-const getDb = require("../utils/database");
+const getDb = require("../utils/database").getDb;
 const mongodb = require("mongodb");
 
 class User {

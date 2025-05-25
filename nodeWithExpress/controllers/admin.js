@@ -13,7 +13,15 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
-  const product = new Product(title, price, imageUrl, description);
+  console.log("user", req.user);
+  const product = new Product(
+    title,
+    price,
+    imageUrl,
+    description,
+    null,
+    req.user._id
+  );
   // // This is to create a product based on the current user and update the user Id in the product column. Possible because we have defined the association in app.js
   // req.user
   //   .createProduct({
