@@ -7,6 +7,8 @@ const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 const mongoConnect = require("./utils/database").mongoConnect;
 
+const User = require("./models/user");
+
 // const db = require("./utils/database");
 // const sequelize = require("./utils/database");
 // const Product = require("./models/product");
@@ -27,13 +29,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
+  User.findById("6832be58544f99aa34f0ab9e")
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log("error while finding user", err));
   // User.findByPk(1)
   //   .then((user) => {
   //     req.user = user;
   //     next();
   //   })
   //   .catch((err) => console.log(err));
-  next();
+  // next();
 });
 
 app.use("/admin", adminRoutes);
