@@ -51,6 +51,17 @@ class Product {
       })
       .catch((err) => console.log("Error while fetching product by Id", err));
   }
+
+  static deleteById(productId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .deleteOne({ _id: new mongodb.ObjectId(productId) })
+      .then((res) => {
+        console.log("deleted the product successfully");
+      })
+      .catch((e) => console.log("error while deleting a product", e));
+  }
 }
 
 module.exports = Product;

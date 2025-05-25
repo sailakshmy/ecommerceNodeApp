@@ -90,14 +90,17 @@ exports.postEditProduct = (req, res, next) => {
   //   .catch((e) => console.log("err while saving edit", e));
 };
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const { productId } = req.body;
+exports.postDeleteProduct = (req, res, next) => {
+  const { productId } = req.body;
+  Product.deleteById(productId)
+    .then(() => res.redirect("/admin/products"))
+    .catch((e) => console.log("err while deleting product from controller", e));
 
-//   Product.findByPk(productId)
-//     .then((product) => product.destroy())
-//     .then(() => res.redirect("/admin/products"))
-//     .catch((e) => console.log("err while deleting product", e));
-// };
+  // Product.findByPk(productId)
+  //   .then((product) => product.destroy())
+  //   .then(() => res.redirect("/admin/products"))
+  //   .catch((e) => console.log("err while deleting product", e));
+};
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
