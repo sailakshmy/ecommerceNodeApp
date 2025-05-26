@@ -136,9 +136,9 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user
-    .getOrders()
+  Order.find({ "user.userId": req.user._id })
     .then((orders) => {
+      console.log("Orders from getOrders", orders, orders[0].products);
       res.render("shop/orders", {
         docTitle: "Your Orders",
         path: "/orders",
@@ -146,4 +146,14 @@ exports.getOrders = (req, res, next) => {
       });
     })
     .catch((e) => console.log("err in getOrders", e));
+  // req.user
+  //   .getOrders()
+  //   .then((orders) => {
+  //     res.render("shop/orders", {
+  //       docTitle: "Your Orders",
+  //       path: "/orders",
+  //       orders: orders,
+  //     });
+  //   })
+  //   .catch((e) => console.log("err in getOrders", e));
 };
