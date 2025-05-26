@@ -98,6 +98,8 @@ exports.postDeleteProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   // Product.fetchAll()
   Product.find()
+    // .select("title price -_id")
+    // .populate("userId", "name")
     .then((products) => {
       console.log("res from getProducts in admin", products);
       res.render("admin/products", {
