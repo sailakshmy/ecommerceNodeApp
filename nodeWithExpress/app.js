@@ -6,6 +6,7 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 const mongoConnect = require("./utils/database").mongoConnect;
+const mongoose = require("mongoose");
 
 const User = require("./models/user");
 
@@ -17,6 +18,9 @@ const User = require("./models/user");
 // const CartItem = require("./models/cart-item");
 // const Order = require("./models/order");
 // const OrderItem = require("./models/order-item");
+
+const uri =
+  "mongodb+srv://Groot:IAmGroot@cluster0.2ehxgue.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0";
 
 const app = express();
 
@@ -52,9 +56,16 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose
+  .connect(uri)
+  .then(() => {
+    app.listen(3000);
+  })
+  .catch((e) => console.log("error while connecting to mongoose", e));
+
+// mongoConnect(() => {
+//   app.listen(3000);
+// });
 
 // // Sequelize Associations
 // Product.belongsTo(User, {
