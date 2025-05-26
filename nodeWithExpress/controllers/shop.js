@@ -112,7 +112,7 @@ exports.postOrder = (req, res, next) => {
       console.log("Products in postOrder", user, user.cart.items);
       const productsFromCart = user.cart.items.map((item) => {
         return {
-          product: { ...item.productId },
+          product: { ...item.productId._doc },
           quantity: item.quantity,
         };
       });
@@ -125,6 +125,7 @@ exports.postOrder = (req, res, next) => {
       });
       return order.save();
     })
+    .then(() => req.user.clearCart())
     .then(() => res.redirect("/orders"))
     .catch((e) => console.log("error in postOrder", e));
 
