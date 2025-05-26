@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const Order = require("../models/order");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -106,9 +107,31 @@ exports.getCheckout = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
   req.user
-    .addOrder()
+    .populate("cart.items.productId", "title")
+    .then((user) => {
+      console.log("Products in postOrder", user, user.cart.items);
+      const productsFromCart = user.cart.items.map((item) => {
+        return {
+          product: { ...item.productId },
+          quantity: item.quantity,
+        };
+      });
+      const order = new Order({
+        products: productsFromCart,
+        user: {
+          name: req.user.name,
+          userId: req.user,
+        },
+      });
+      return order.save();
+    })
     .then(() => res.redirect("/orders"))
     .catch((e) => console.log("error in postOrder", e));
+
+  // req.user
+  //   .addOrder()
+  //   .then(() => res.redirect("/orders"))
+  //   .catch((e) => console.log("error in postOrder", e));
 };
 
 exports.getOrders = (req, res, next) => {
