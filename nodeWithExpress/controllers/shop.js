@@ -46,16 +46,31 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   req.user
-    .getCart()
-    .then((products) => {
-      console.log("Products in getProducts from getCart", products);
+    .populate("cart.items.productId", "title")
+    .then((user) => {
+      console.log(
+        "Products in getProducts from getCart",
+        user,
+        user.cart.items
+      );
       res.render("shop/cart", {
         docTitle: "Your cart",
         path: "/cart",
-        products: products,
+        products: user.cart.items,
       });
     })
     .catch((err) => console.log("error in getCart", err));
+  // req.user
+  //   .getCart()
+  //   .then((products) => {
+  //     console.log("Products in getProducts from getCart", products);
+  //     res.render("shop/cart", {
+  //       docTitle: "Your cart",
+  //       path: "/cart",
+  //       products: products,
+  //     });
+  //   })
+  //   .catch((err) => console.log("error in getCart", err));
 };
 
 exports.postCart = (req, res, next) => {
