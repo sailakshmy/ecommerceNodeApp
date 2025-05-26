@@ -8,7 +8,7 @@ const errorController = require("./controllers/error");
 const mongoConnect = require("./utils/database").mongoConnect;
 const mongoose = require("mongoose");
 
-// const User = require("./models/user");
+const User = require("./models/user");
 
 // const db = require("./utils/database");
 // const sequelize = require("./utils/database");
@@ -33,22 +33,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.findById("6832be58544f99aa34f0ab9e")
-  //   .then((user) => {
-  //     console.log("Found a user", user);
-  //     const { name, email, cart, _id } = user;
-  //     req.user = new User(name, email, cart, _id);
-
-  //     next();
-  //   })
-  //   .catch((err) => console.log("error while finding user", err));
+  User.findById("68349e624e3cc2ba88ec63ad")
+    .then((user) => {
+      console.log("Found a user", user);
+      // const { name, email, cart, _id } = user;
+      // req.user = new User(name, email, cart, _id);
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log("error while finding user", err));
   // User.findByPk(1)
   //   .then((user) => {
   //     req.user = user;
   //     next();
   //   })
   //   .catch((err) => console.log(err));
-  next();
+  // next();
 });
 
 app.use("/admin", adminRoutes);
@@ -59,6 +59,19 @@ app.use(errorController.get404);
 mongoose
   .connect(uri)
   .then(() => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const newUser = new User({
+          name: "abc",
+          email: "abc@test.com",
+          cart: {
+            items: [],
+          },
+        });
+        newUser.save();
+      }
+    });
+
     app.listen(3000);
   })
   .catch((e) => console.log("error while connecting to mongoose", e));
