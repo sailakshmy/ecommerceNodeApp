@@ -31,3 +31,10 @@ exports.postLogin = (req, res, next) => {
     })
     .catch((err) => console.log("error while finding user", err));
 };
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
+    console.log("Error logged during logout", err);
+    res.redirect("/");
+  });
+};
