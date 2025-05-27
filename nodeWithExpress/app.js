@@ -10,6 +10,7 @@ const errorController = require("./controllers/error");
 const mongoConnect = require("./utils/database").mongoConnect;
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoDbStore = require("connect-mongodb-session")(session);
 
 const User = require("./models/user");
 
@@ -27,6 +28,11 @@ const uri =
 
 const app = express();
 
+const store = new MongoDbStore({
+  uri,
+  collection: "sessions",
+});
+
 app.set("view engine", "ejs");
 
 app.set("views", "views");
@@ -40,6 +46,7 @@ app.use(
       "secret key that is expected to be a long string value but it can be anything apparently",
     resave: false,
     saveUninitialized: false,
+    store,
   })
 );
 
