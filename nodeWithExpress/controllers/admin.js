@@ -7,20 +7,20 @@ exports.getAddProduct = (req, res, next) => {
     docTitle: "Add Products",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.isLoggedIn,
+    isAuthenticated: req.session.user,
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
-  console.log("user", req.user);
+  console.log("user", req.session.user);
   const product = new Product({
     title,
     price,
     imageUrl,
     description,
-    userId: req.user,
+    userId: req.session.user,
   });
 
   // const product = new Product(
@@ -59,7 +59,7 @@ exports.getEditProduct = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode === "true" ? true : false,
         product: product,
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((e) => console.log("e while editing", e));
@@ -108,7 +108,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         docTitle: "Admin products",
         path: "/admin/products",
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((e) => console.log("error from getProducts", e));

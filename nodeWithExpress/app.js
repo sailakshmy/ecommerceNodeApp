@@ -51,22 +51,22 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  User.findById("68349f58c42c88be912fa7ab")
-    .then((user) => {
-      console.log("Found a user", user);
-      // const { name, email, cart, _id } = user;
-      // req.user = new User(name, email, cart, _id);
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log("error while finding user", err));
+  // User.findById("68349f58c42c88be912fa7ab")
+  //   .then((user) => {
+  //     console.log("Found a user", user);
+  //     // const { name, email, cart, _id } = user;
+  //     // req.user = new User(name, email, cart, _id);
+  //     req.user = user;
+  //     next();
+  //   })
+  //   .catch((err) => console.log("error while finding user", err));
   // User.findByPk(1)
   //   .then((user) => {
   //     req.user = user;
   //     next();
   //   })
   //   .catch((err) => console.log(err));
-  // next();
+  next();
 });
 
 app.use("/admin", adminRoutes);

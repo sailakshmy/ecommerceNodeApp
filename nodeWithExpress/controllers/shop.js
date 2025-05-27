@@ -11,7 +11,7 @@ exports.getProducts = (req, res, next) => {
         docTitle: "All products",
         path: "/products",
         hasProducts: products.length > 0,
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.user,
       });
     })
     .catch((err) => console.log("error while fetching all products", err));
@@ -27,7 +27,7 @@ exports.getProduct = (req, res, next) => {
         docTitle: product?.title,
         product: product,
         path: "/products",
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((e) => console.log("err", e));
@@ -42,14 +42,14 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         docTitle: "Shop",
         path: "/",
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.user,
       });
     })
     .catch((e) => console.log("error from getIndex", e));
 };
 
 exports.getCart = (req, res, next) => {
-  req.user
+  req.session.user
     .populate("cart.items.productId", "title")
     .then((user) => {
       console.log(
@@ -61,7 +61,7 @@ exports.getCart = (req, res, next) => {
         docTitle: "Your cart",
         path: "/cart",
         products: user.cart.items,
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log("error in getCart", err));
@@ -82,7 +82,7 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId)
     .then((product) => {
-      return req.user.addToCart(product);
+      return req.session.user.addToCart(product);
     })
     .then((result) => {
       console.log("result from postCart", result);
@@ -93,7 +93,8 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const { productId } = req.body;
-  req.user
+  // req.user
+  req.session.user
     .deleteProductFromCart(productId)
     .then(() => res.redirect("/cart"))
     .catch((e) => console.log("error while deleting item from the cart", e));
@@ -105,13 +106,14 @@ exports.getCheckout = (req, res, next) => {
       docTitle: "Checkout",
       path: "/checkout",
       hasProducts: products.length > 0,
-      isAuthenticated: req.isLoggedIn,
+      isAuthenticated: req.session.user,
     });
   });
 };
 
 exports.postOrder = (req, res, next) => {
-  req.user
+  // req.user
+  req.session.user
     .populate("cart.items.productId", "title")
     .then((user) => {
       console.log("Products in postOrder", user, user.cart.items);
@@ -124,13 +126,13 @@ exports.postOrder = (req, res, next) => {
       const order = new Order({
         products: productsFromCart,
         user: {
-          name: req.user.name,
-          userId: req.user,
+          name: req.session.user.name, //req.user.name,
+          userId: req.session.user, //req.user,
         },
       });
       return order.save();
     })
-    .then(() => req.user.clearCart())
+    .then(() => req.session.user.clearCart()) // req.user.clearCart())
     .then(() => res.redirect("/orders"))
     .catch((e) => console.log("error in postOrder", e));
 
@@ -141,14 +143,14 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  Order.find({ "user.userId": req.user._id })
+  Order.find({ "user.userId": req.session.user._id }) //req.user._id })
     .then((orders) => {
       console.log("Orders from getOrders", orders, orders[0].products);
       res.render("shop/orders", {
         docTitle: "Your Orders",
         path: "/orders",
         orders: orders,
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.user,
       });
     })
     .catch((e) => console.log("err in getOrders", e));
