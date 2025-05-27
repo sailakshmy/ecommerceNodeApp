@@ -9,6 +9,7 @@ const authRoutes = require("./routes/auth");
 const errorController = require("./controllers/error");
 const mongoConnect = require("./utils/database").mongoConnect;
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 const User = require("./models/user");
 
@@ -33,6 +34,14 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret:
+      "secret key that is expected to be a long string value but it can be anything apparently",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use((req, res, next) => {
   User.findById("68349f58c42c88be912fa7ab")
