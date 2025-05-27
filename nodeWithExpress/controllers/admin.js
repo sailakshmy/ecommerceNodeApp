@@ -7,20 +7,20 @@ exports.getAddProduct = (req, res, next) => {
     docTitle: "Add Products",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
-  console.log("user", req.session.user);
+  console.log("user", req.user);
   const product = new Product({
     title,
     price,
     imageUrl,
     description,
-    userId: req.session.user,
+    userId: req.user,
   });
 
   // const product = new Product(

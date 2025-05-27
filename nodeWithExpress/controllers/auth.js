@@ -20,16 +20,27 @@ exports.postLogin = (req, res, next) => {
 
   User.findById("68349f58c42c88be912fa7ab")
     .then((user) => {
-      console.log("Found a user", user);
-      // const { name, email, cart, _id } = user;
-      // req.user = new User(name, email, cart, _id);
-      // req.user = user;
       req.session.isLoggedIn = true;
       req.session.user = user;
-      // next();
-      res.redirect("/");
+      req.session.save((err) => {
+        console.log(err);
+        res.redirect("/");
+      });
     })
-    .catch((err) => console.log("error while finding user", err));
+    .catch((err) => console.log(err));
+  // .then((user) => {
+  //   console.log("Found a user from postLogin", user);
+  //   // const { name, email, cart, _id } = user;
+  //   // req.user = new User(name, email, cart, _id);
+  //   // req.user = user;
+  //   req.session.isLoggedIn = true;
+  //   req.session.user = user;
+  //   req.session.save(() => res.redirect("/"));
+  //   // next();
+  //   // res.redirect("/");
+  // })
+
+  // .catch((err) => console.log("error while finding user", err));
 };
 
 exports.postLogout = (req, res, next) => {
