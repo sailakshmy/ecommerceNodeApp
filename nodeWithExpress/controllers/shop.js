@@ -11,6 +11,7 @@ exports.getProducts = (req, res, next) => {
         docTitle: "All products",
         path: "/products",
         hasProducts: products.length > 0,
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => console.log("error while fetching all products", err));
@@ -26,6 +27,7 @@ exports.getProduct = (req, res, next) => {
         docTitle: product?.title,
         product: product,
         path: "/products",
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((e) => console.log("err", e));
@@ -40,6 +42,7 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         docTitle: "Shop",
         path: "/",
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((e) => console.log("error from getIndex", e));
@@ -58,6 +61,7 @@ exports.getCart = (req, res, next) => {
         docTitle: "Your cart",
         path: "/cart",
         products: user.cart.items,
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => console.log("error in getCart", err));
@@ -101,6 +105,7 @@ exports.getCheckout = (req, res, next) => {
       docTitle: "Checkout",
       path: "/checkout",
       hasProducts: products.length > 0,
+      isAuthenticated: req.isLoggedIn,
     });
   });
 };
@@ -143,6 +148,7 @@ exports.getOrders = (req, res, next) => {
         docTitle: "Your Orders",
         path: "/orders",
         orders: orders,
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((e) => console.log("err in getOrders", e));
