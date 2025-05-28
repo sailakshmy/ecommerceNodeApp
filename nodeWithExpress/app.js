@@ -12,6 +12,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const User = require("./models/user");
 
@@ -55,6 +56,8 @@ app.use(
 );
 
 app.use(csrfProtection);
+
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {

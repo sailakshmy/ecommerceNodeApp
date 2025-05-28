@@ -12,7 +12,7 @@ exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     docTitle: "Login!",
     path: "/login",
-    isAuthenticated: isLoggedIn,
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -22,6 +22,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
+        req.flash("error", "Invalid credentials!");
         return res.redirect("/login");
       }
       bcrypt
