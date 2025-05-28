@@ -10,6 +10,7 @@
   "author": "Sai Lakshmy",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "connect-mongodb-session": "^5.0.0",
     "ejs": "^3.1.10",
