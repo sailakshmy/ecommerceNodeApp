@@ -7,12 +7,16 @@ exports.getLogin = (req, res, next) => {
     "request headers from getLogin",
     req.get("Cookie")?.trim()?.split("=")?.[1]
   );
-  const isLoggedIn = req.get("Cookie")?.trim()?.split("=")?.[1];
+
   console.log("req.session", req.session, req.session.isLoggedIn);
+  let error = req.flash("error");
+  if (error.length > 0) {
+    error = error?.[0];
+  } else error = null;
   res.render("auth/login", {
     docTitle: "Login!",
     path: "/login",
-    errorMessage: req.flash("error"),
+    errorMessage: error,
   });
 };
 
