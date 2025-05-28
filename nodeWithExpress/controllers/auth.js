@@ -58,4 +58,27 @@ exports.getSignup = (req, res, next) => {
   });
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+  const { email, password, confirmPassword } = req.body;
+
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      const user = new User({
+        email,
+        password,
+        cart: {
+          items: [],
+        },
+      });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((e) =>
+      console.log("error while fetching existing user in postsignup", e)
+    );
+};

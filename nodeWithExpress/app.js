@@ -94,18 +94,18 @@ app.use(errorController.get404);
 mongoose
   .connect(uri)
   .then(() => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const newUser = new User({
-          name: "abc",
-          email: "abc@test.com",
-          cart: {
-            items: [],
-          },
-        });
-        newUser.save();
-      }
-    });
+    // User.findOne().then((user) => {
+    //   if (!user) {
+    //     const newUser = new User({
+    //       name: "abc",
+    //       email: "abc@test.com",
+    //       cart: {
+    //         items: [],
+    //       },
+    //     });
+    //     newUser.save();
+    //   }
+    // });
 
     app.listen(3000);
   })
