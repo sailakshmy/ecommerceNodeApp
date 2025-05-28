@@ -17,19 +17,47 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.redirect("/login");
+      }
+      bcrypt
+        .compare(password, user.password)
+        .then((passwordsMatch) => {
+          if (passwordsMatch) {
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            return req.session.save((err) => {
+              console.log(err);
+              res.redirect("/");
+            });
+          } else {
+            return res.redirect("/login");
+          }
+        })
+        .catch((err) => {
+          console.log("Error while comparing passwords", err);
+          return res.redirect("/login");
+        });
+    })
+    .catch((err) => console.log(err));
+
   // req.isLoggedIn = true;
   // res.setHeader("Set-Cookie", "loggedIn=true");
 
-  User.findById("68349f58c42c88be912fa7ab")
-    .then((user) => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      req.session.save((err) => {
-        console.log(err);
-        res.redirect("/");
-      });
-    })
-    .catch((err) => console.log(err));
+  // User.findById("68349f58c42c88be912fa7ab")
+  //   .then((user) => {
+  //     req.session.isLoggedIn = true;
+  //     req.session.user = user;
+  //     req.session.save((err) => {
+  //       console.log(err);
+  //       res.redirect("/");
+  //     });
+  //   })
+  //   .catch((err) => console.log(err));
   // .then((user) => {
   //   console.log("Found a user from postLogin", user);
   //   // const { name, email, cart, _id } = user;
