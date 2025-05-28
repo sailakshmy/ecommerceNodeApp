@@ -40,6 +40,7 @@ exports.postLogin = (req, res, next) => {
               res.redirect("/");
             });
           } else {
+            req.flash("error", "Invalid credentials!");
             return res.redirect("/login");
           }
         })
@@ -86,10 +87,15 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
+  let error = req.flash("error");
+  if (error.length > 0) {
+    error = error?.[0];
+  } else error = null;
   res.render("auth/signup", {
     path: "/signup",
     docTitle: "Signup",
     isAuthenticated: false,
+    errorMessage: error,
   });
 };
 
@@ -99,6 +105,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
+        req.flash("error", "Email already exists!");
         return res.redirect("/signup");
       }
       return bcrypt.hash(password, 12).then((hashedPassword) => {
