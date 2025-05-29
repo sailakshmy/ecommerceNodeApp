@@ -144,3 +144,15 @@ exports.postSignup = (req, res, next) => {
       console.log("error while fetching existing user in postsignup", e)
     );
 };
+
+exports.getResetPassword = (req, res, next) => {
+  let error = req.flash("error");
+  if (error.length > 0) {
+    error = error?.[0];
+  } else error = null;
+  res.render("auth/reset", {
+    docTitle: "Reset password",
+    path: "/reset",
+    errorMessage: error,
+  });
+};
