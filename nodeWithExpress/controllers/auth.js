@@ -1,6 +1,18 @@
 const bcrypt = require("bcryptjs");
 
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+
 const User = require("../models/user");
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        "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",
+    },
+  })
+);
 
 exports.getLogin = (req, res, next) => {
   console.log(
@@ -121,6 +133,12 @@ exports.postSignup = (req, res, next) => {
     })
     .then((result) => {
       res.redirect("/login");
+      return transporter.sendMail({
+        to: email,
+        from: "sailakshmy94@hotmail.com",
+        subject: "Signup successful!",
+        html: "<h1>You have successfully signed up to an ecommerce application built using Node and Express with MongoDb and Mongoose.</h1>",
+      });
     })
     .catch((e) =>
       console.log("error while fetching existing user in postsignup", e)
