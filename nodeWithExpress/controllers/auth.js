@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const bcrypt = require("bcryptjs");
 
 const nodemailer = require("nodemailer");
@@ -154,5 +156,41 @@ exports.getResetPassword = (req, res, next) => {
     docTitle: "Reset password",
     path: "/reset",
     errorMessage: error,
+  });
+};
+
+exports.postResetPassword = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(
+        "error while generating random token in postResetPassword",
+        err
+      );
+      return res.redirect("/reset");
+    }
+    const token = buffer.toString("hex");
+    const { email } = req.body;
+    User.findOne({ email: email })
+      .then((user) => {
+        if (!user) {
+          req.flash("error", "No account with the email");
+          return res.redirect("/reset");
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(() => {
+        res.redirect("/");
+        return transporter.sendMail({
+          to: email,
+          from: "sailakshmy94@hotmail.com",
+          subject: "Reset password",
+          html: `
+          <p>You requested a password reset</p>
+          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a>to set a new password</p>`,
+        });
+      })
+      .catch((e) => console.log("error while retrieving user", e));
   });
 };
