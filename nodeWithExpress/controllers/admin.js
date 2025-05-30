@@ -80,22 +80,26 @@ exports.postEditProduct = (req, res, next) => {
 
   Product.findById(productId)
     .then((product) => {
+      if (product.userId !== req.user._id) {
+        return res.redirect("/");
+      }
       product.title = title;
       product.description = description;
       product.imageUrl = imageUrl;
       product.price = price;
-      return product.save();
+      return product.save().then(() => {
+        res.redirect("/admin/products");
+      });
     })
-    .then(() => {
-      res.redirect("/admin/products");
-    })
+
     .catch((e) => console.log("err while saving edit", e));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
   const { productId } = req.body;
   // Product.deleteById(productId)
-  Product.findByIdAndDelete(productId)
+  Product.deleteOne({ _id: productId, userId: req.user._id })
+    //findByIdAndDelete(productId)
     .then(() => res.redirect("/admin/products"))
     .catch((e) => console.log("err while deleting product from controller", e));
 };
