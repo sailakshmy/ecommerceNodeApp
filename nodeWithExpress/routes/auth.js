@@ -18,4 +18,6 @@ router.get("/reset", authController.getResetPassword);
 
 router.post("/reset", authController.postResetPassword);
 
+router.get("/reset/:token", authController.getNewPassword);
+
 module.exports = router;

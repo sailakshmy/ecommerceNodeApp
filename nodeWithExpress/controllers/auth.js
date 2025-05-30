@@ -193,3 +193,32 @@ exports.postResetPassword = (req, res, next) => {
       .catch((e) => console.log("error while retrieving user", e));
   });
 };
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+
+  User.findOne({
+    resetToken: token,
+    resetTokenExpiration: {
+      $gt: Date.now(),
+    },
+  })
+    .then((user) => {
+      let error = req.flash("error");
+      if (error.length > 0) {
+        error = error?.[0];
+      } else error = null;
+      res.render("auth/new-password", {
+        docTitle: "New password",
+        path: "/new-password",
+        errorMessage: error,
+        userId: user._id.toString(),
+      });
+    })
+    .catch((e) =>
+      console.log(
+        "Error while fetching a user with resetToken and resetTokenExpiration in getNewPassword",
+        e
+      )
+    );
+};
