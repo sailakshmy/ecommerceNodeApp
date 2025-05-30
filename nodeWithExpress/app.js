@@ -13,6 +13,7 @@ const session = require("express-session");
 const MongoDbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const dotenv = require("dotenv");
 
 const User = require("./models/user");
 
@@ -29,7 +30,7 @@ const uri =
   "mongodb+srv://Groot:IAmGroot@cluster0.2ehxgue.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0";
 
 const app = express();
-
+dotenv.config();
 const store = new MongoDbStore({
   uri,
   collection: "sessions",
