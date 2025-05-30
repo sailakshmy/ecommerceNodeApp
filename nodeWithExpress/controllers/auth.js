@@ -213,12 +213,44 @@ exports.getNewPassword = (req, res, next) => {
         path: "/new-password",
         errorMessage: error,
         userId: user._id.toString(),
+        passwordToken: token,
       });
     })
     .catch((e) =>
       console.log(
         "Error while fetching a user with resetToken and resetTokenExpiration in getNewPassword",
         e
+      )
+    );
+};
+
+exports.postNewPassword = (req, res, next) => {
+  const { password, userId, passwordToken } = req.body;
+  let resetUser;
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExpiration: {
+      $gt: Date.now(),
+    },
+    _id: userId,
+  })
+    .then((user) => {
+      resetUser = user;
+      return bcrypt.hash(password, 12);
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = undefined;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then(() => {
+      res.redirect("/login");
+    })
+    .catch((err) =>
+      console.log(
+        "Error while fetching user with id, resetToken and resetTokenExpiration in postnewPassword",
+        err
       )
     );
 };
