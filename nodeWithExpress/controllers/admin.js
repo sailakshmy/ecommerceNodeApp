@@ -1,3 +1,4 @@
+const { ValidationError } = require("sequelize");
 const Product = require("../models/product");
 
 const { validationResult } = require("express-validator");
@@ -15,6 +16,7 @@ exports.getAddProduct = (req, res, next) => {
     isAuthenticated: req.session.isLoggedIn,
     hasError: false,
     errorMessage: null,
+    validationErrors: [],
   });
 };
 
@@ -39,6 +41,7 @@ exports.postAddProduct = (req, res, next) => {
       },
       isAuthenticated: req.session.isLoggedIn,
       errorMessage: errors?.array()?.[0]?.msg,
+      validationErrors: errors?.array(),
     });
   }
   const product = new Product({
@@ -88,6 +91,7 @@ exports.getEditProduct = (req, res, next) => {
         hasError: false,
         isAuthenticated: req.session.isLoggedIn,
         errorMessage: null,
+        validationErrors: [],
       });
     })
     .catch((e) => console.log("e while editing", e));
@@ -102,6 +106,27 @@ exports.postEditProduct = (req, res, next) => {
   //   description,
   //   productId,
   // });
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("Error on add product form", errors?.array());
+    return res.status(422).render("admin/edit-product", {
+      docTitle: "Edit Products",
+      path: "/admin/edit-product",
+      editing: true,
+      hasError: true,
+      product: {
+        title: title,
+        imageUrl,
+        description,
+        price,
+        _id: productId,
+      },
+      isAuthenticated: req.session.isLoggedIn,
+      errorMessage: errors?.array()?.[0]?.msg,
+      validationErrors: errors?.array(),
+    });
+  }
 
   Product.findById(productId)
     .then((product) => {
