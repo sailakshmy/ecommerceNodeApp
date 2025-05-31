@@ -34,6 +34,11 @@ exports.getLogin = (req, res, next) => {
     docTitle: "Login!",
     path: "/login",
     errorMessage: error,
+    oldInput: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -45,14 +50,27 @@ exports.postLogin = (req, res, next) => {
       docTitle: "Login!",
       path: "/login",
       errorMessage: errors.array()?.[0]?.msg,
+      oldInput: {
+        email: email,
+        password: password,
+      },
+      validationErrors: errors.array(),
     });
   }
 
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        req.flash("error", "Invalid credentials!");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          docTitle: "Login!",
+          path: "/login",
+          errorMessage: "Invalid credentials!",
+          oldInput: {
+            email: email,
+            password: password,
+          },
+          validationErrors: [],
+        });
       }
       bcrypt
         .compare(password, user.password)
@@ -65,8 +83,16 @@ exports.postLogin = (req, res, next) => {
               res.redirect("/");
             });
           } else {
-            req.flash("error", "Invalid credentials!");
-            return res.redirect("/login");
+            return res.status(422).render("auth/login", {
+              docTitle: "Login!",
+              path: "/login",
+              errorMessage: "Invalid credentials!",
+              oldInput: {
+                email: email,
+                password: password,
+              },
+              validationErrors: [],
+            });
           }
         })
         .catch((err) => {

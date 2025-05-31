@@ -16,11 +16,11 @@
                             <input type="hidden" value="<%= csrfToken %>" name="_csrf" />
                             <div class="form-control">
                                 <label for="email">Email</label>
-                                <input type="email" name="email" id="email">
+                                <input type="email" name="email" id="email" class="<%= validationErrors.find(err => err.path === 'email') ? 'invalid':'' %>" value="<%= oldInput.email%>">
                             </div>
                             <div class="form-control">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" id="password">
+                                <input type="password" name="password" id="password" class="<%= validationErrors.find(err => err.path === 'password') ? 'invalid':'' %>" value="<%= oldInput.password%>">
                             </div>
                             <button class="btn" type="submit">
                                 Login
