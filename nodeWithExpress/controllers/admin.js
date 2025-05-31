@@ -1,5 +1,7 @@
 const Product = require("../models/product");
 
+const { validationResult } = require("express-validator");
+
 exports.getAddProduct = (req, res, next) => {
   // console.log("In the middleware for add products");
   // res.sendFile(path.join(rootDir, "views", "add-product.html"));
@@ -11,6 +13,8 @@ exports.getAddProduct = (req, res, next) => {
     path: "/admin/add-product",
     editing: false,
     isAuthenticated: req.session.isLoggedIn,
+    hasError: false,
+    errorMessage: null,
   });
 };
 
@@ -18,6 +22,25 @@ exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, imageUrl, description, price } = req.body;
   console.log("user", req.user);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log("Error on add product form", errors?.array());
+    return res.status(422).render("admin/edit-product", {
+      docTitle: "Add Products",
+      path: "/admin/edit-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        imageUrl,
+        description,
+        price,
+      },
+      isAuthenticated: req.session.isLoggedIn,
+      errorMessage: errors?.array()?.[0]?.msg,
+    });
+  }
   const product = new Product({
     title,
     price,
@@ -62,7 +85,9 @@ exports.getEditProduct = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode === "true" ? true : false,
         product: product,
+        hasError: false,
         isAuthenticated: req.session.isLoggedIn,
+        errorMessage: null,
       });
     })
     .catch((e) => console.log("e while editing", e));
