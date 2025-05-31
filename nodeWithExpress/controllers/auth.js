@@ -127,7 +127,7 @@ exports.postSignup = (req, res, next) => {
       path: "/signup",
       docTitle: "Signup",
       isAuthenticated: false,
-      errorMessage: errors.array(),
+      errorMessage: errors.array()?.[0]?.msg,
     });
   }
   User.findOne({ email: email })
