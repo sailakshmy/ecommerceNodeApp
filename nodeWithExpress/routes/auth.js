@@ -4,6 +4,8 @@ const { check, body } = require("express-validator");
 
 const authController = require("../controllers/auth");
 
+const User = require("../models/user");
+
 const router = express.Router();
 
 router.get("/login", authController.getLogin);
@@ -19,11 +21,17 @@ router.post(
       .isEmail()
       .withMessage("Please enter a valid email")
       .custom((value, { req }) => {
-        if (value === "test@test.com") {
-          // Just a dummy test value
-          throw new Error("This email address is not allowed");
-        }
-        return true;
+        // if (value === "test@test.com") {
+        //   // Just a dummy test value
+        //   throw new Error("This email address is not allowed");
+        // }
+        // return true;
+
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject("Email already exists!");
+          }
+        });
       }),
     body(
       "password",
