@@ -14,7 +14,16 @@ router.post("/logout", authController.postLogout);
 
 router.post(
   "/signup",
-  check("email").isEmail().withMessage("Please enter a valid email"),
+  check("email")
+    .isEmail()
+    .withMessage("Please enter a valid email")
+    .custom((value, { req }) => {
+      if (value === "test@test.com") {
+        // Just a dummy test value
+        throw new Error("This email address is not allowed");
+      }
+      return true;
+    }),
   authController.postSignup
 );
 
