@@ -59,14 +59,20 @@ app.use(
 app.use(csrfProtection);
 
 app.use(flash());
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 
 app.use((req, res, next) => {
+  // throw new Error("Dummy new");
   if (!req.session.user) {
     return next();
   }
   User.findById(req.session.user._id)
     .then((user) => {
-      throw new Error("Dummy");
+      // throw new Error("Dummy");
       if (!user) {
         return next();
       }
@@ -75,7 +81,8 @@ app.use((req, res, next) => {
     })
     .catch((err) => {
       console.log("err while finding user by Id", err);
-      throw new Error(err);
+      // throw new Error(err);
+      next(new Error(err));
     });
 });
 
@@ -102,12 +109,6 @@ app.use((req, res, next) => {
 //   next();
 // });
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
-
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
@@ -115,7 +116,12 @@ app.use(errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  res.redirect("/500");
+  // res.redirect("/500");
+  res.status(500).render("500", {
+    docTitle: "Error Occurred",
+    path: "/500",
+    isAuthenticated: req?.session?.isLoggedIn,
+  });
 });
 
 mongoose
