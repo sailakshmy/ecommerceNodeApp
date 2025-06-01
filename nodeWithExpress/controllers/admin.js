@@ -86,7 +86,10 @@ exports.postAddProduct = (req, res, next) => {
       //   errorMessage: "Database operation failed",
       //   validationErrors: [],
       // });
-      res.redirect("/500");
+      // res.redirect("/500");
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
     });
 };
 
@@ -114,7 +117,12 @@ exports.getEditProduct = (req, res, next) => {
         validationErrors: [],
       });
     })
-    .catch((e) => console.log("e while editing", e));
+    .catch((e) => {
+      console.log("e while editing", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.postEditProduct = (req, res, next) => {
