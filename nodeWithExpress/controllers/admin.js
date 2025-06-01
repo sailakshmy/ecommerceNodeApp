@@ -45,7 +45,7 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   const product = new Product({
-    _id: new mongoose.Types.ObjectId("683b159e554b4554d0559364"),
+    // _id: new mongoose.Types.ObjectId("683b159e554b4554d0559364"),
     title,
     price,
     imageUrl,
@@ -170,7 +170,12 @@ exports.postEditProduct = (req, res, next) => {
       });
     })
 
-    .catch((e) => console.log("err while saving edit", e));
+    .catch((e) => {
+      console.log("err while saving edit", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -196,5 +201,10 @@ exports.getProducts = (req, res, next) => {
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((e) => console.log("error from getProducts", e));
+    .catch((e) => {
+      console.log("error from getProducts", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };

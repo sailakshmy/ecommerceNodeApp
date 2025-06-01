@@ -14,7 +14,12 @@ exports.getProducts = (req, res, next) => {
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err) => console.log("error while fetching all products", err));
+    .catch((e) => {
+      console.log("error while fetching all products", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.getProduct = (req, res, next) => {
@@ -30,7 +35,12 @@ exports.getProduct = (req, res, next) => {
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((e) => console.log("err", e));
+    .catch((e) => {
+      console.log("err", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.getIndex = (req, res, next) => {
@@ -44,7 +54,12 @@ exports.getIndex = (req, res, next) => {
         path: "/",
       });
     })
-    .catch((e) => console.log("error from getIndex", e));
+    .catch((e) => {
+      console.log("error from getIndex", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.getCart = (req, res, next) => {
@@ -63,7 +78,12 @@ exports.getCart = (req, res, next) => {
         isAuthenticated: req?.session?.isLoggedIn,
       });
     })
-    .catch((err) => console.log("error in getCart", err));
+    .catch((e) => {
+      console.log("error in getCart", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
   // req.user
   //   .getCart()
   //   .then((products) => {
@@ -87,7 +107,12 @@ exports.postCart = (req, res, next) => {
       console.log("result from postCart", result);
       res.redirect("/cart");
     })
-    .catch((e) => console.log("error in postCart method", e));
+    .catch((e) => {
+      console.log("error in postCart method", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
@@ -96,7 +121,12 @@ exports.postCartDeleteProduct = (req, res, next) => {
   req.user
     .deleteProductFromCart(productId)
     .then(() => res.redirect("/cart"))
-    .catch((e) => console.log("error while deleting item from the cart", e));
+    .catch((e) => {
+      console.log("error while deleting item from the cart", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.getCheckout = (req, res, next) => {
@@ -134,7 +164,12 @@ exports.postOrder = (req, res, next) => {
     })
     .then(() => req.user.clearCart()) // req.user.clearCart())
     .then(() => res.redirect("/orders"))
-    .catch((e) => console.log("error in postOrder", e));
+    .catch((e) => {
+      console.log("error in postOrder", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 
   // req.user
   //   .addOrder()
@@ -153,7 +188,12 @@ exports.getOrders = (req, res, next) => {
         isAuthenticated: req.user,
       });
     })
-    .catch((e) => console.log("err in getOrders", e));
+    .catch((e) => {
+      console.log("err in getOrders", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
   // req.user
   //   .getOrders()
   //   .then((orders) => {

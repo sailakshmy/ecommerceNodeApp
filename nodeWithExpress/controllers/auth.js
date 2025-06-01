@@ -100,7 +100,12 @@ exports.postLogin = (req, res, next) => {
           return res.redirect("/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((e) => {
+      console.log(e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 
   // req.isLoggedIn = true;
   // res.setHeader("Set-Cookie", "loggedIn=true");
@@ -204,9 +209,12 @@ exports.postSignup = (req, res, next) => {
         html: "<h1>You have successfully signed up to an ecommerce application built using Node and Express with MongoDb and Mongoose.</h1>",
       });
     })
-    .catch((e) =>
-      console.log("error while fetching existing user in postsignup", e)
-    );
+    .catch((e) => {
+      console.log("error while fetching existing user in postsignup", e);
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.getResetPassword = (req, res, next) => {
@@ -253,7 +261,12 @@ exports.postResetPassword = (req, res, next) => {
           <p>Click this <a href="http://localhost:3000/reset/${token}">link</a>to set a new password</p>`,
         });
       })
-      .catch((e) => console.log("error while retrieving user", e));
+      .catch((e) => {
+        console.log("error while retrieving user", e);
+        const err = new Error(e);
+        err.httpStatusCode = 500;
+        return next(err);
+      });
   });
 };
 
@@ -279,12 +292,15 @@ exports.getNewPassword = (req, res, next) => {
         passwordToken: token,
       });
     })
-    .catch((e) =>
+    .catch((e) => {
       console.log(
         "Error while fetching a user with resetToken and resetTokenExpiration in getNewPassword",
         e
-      )
-    );
+      );
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
 
 exports.postNewPassword = (req, res, next) => {
@@ -310,10 +326,13 @@ exports.postNewPassword = (req, res, next) => {
     .then(() => {
       res.redirect("/login");
     })
-    .catch((err) =>
+    .catch((err) => {
       console.log(
         "Error while fetching user with id, resetToken and resetTokenExpiration in postnewPassword",
         err
-      )
-    );
+      );
+      const err = new Error(e);
+      err.httpStatusCode = 500;
+      return next(err);
+    });
 };
