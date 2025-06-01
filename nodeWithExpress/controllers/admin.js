@@ -22,7 +22,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
-  const { title, imageUrl, description, price } = req.body;
+  const { title, image, description, price } = req.body;
   console.log("user", req.user);
 
   const errors = validationResult(req);
@@ -35,7 +35,7 @@ exports.postAddProduct = (req, res, next) => {
       hasError: true,
       product: {
         title: title,
-        imageUrl,
+        imageUrl: image,
         description,
         price,
       },
@@ -48,7 +48,7 @@ exports.postAddProduct = (req, res, next) => {
     // _id: new mongoose.Types.ObjectId("683b159e554b4554d0559364"),
     title,
     price,
-    imageUrl,
+    imageUrl: image,
     description,
     userId: req.user,
   });
