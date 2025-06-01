@@ -1,6 +1,6 @@
-const { ValidationError } = require("sequelize");
+// const { ValidationError } = require("sequelize");
 const Product = require("../models/product");
-
+const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 
 exports.getAddProduct = (req, res, next) => {
@@ -30,7 +30,7 @@ exports.postAddProduct = (req, res, next) => {
     console.log("Error on add product form", errors?.array());
     return res.status(422).render("admin/edit-product", {
       docTitle: "Add Products",
-      path: "/admin/edit-product",
+      path: "/admin/add-product",
       editing: false,
       hasError: true,
       product: {
@@ -45,6 +45,7 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   const product = new Product({
+    _id: new mongoose.Types.ObjectId("683b159e554b4554d0559364"),
     title,
     price,
     imageUrl,
@@ -67,7 +68,26 @@ exports.postAddProduct = (req, res, next) => {
       console.log("Created product from postAddProduct");
       res.redirect("/admin/products");
     })
-    .catch((e) => console.log("e from postAddProduct", e));
+    .catch((e) => {
+      console.log("e from postAddProduct", e);
+      // throw new Error(e);
+      // return res.status(500).render("admin/edit-product", {
+      //   docTitle: "Add Products",
+      //   path: "/admin/add-product",
+      //   editing: false,
+      //   hasError: true,
+      //   product: {
+      //     title: title,
+      //     imageUrl,
+      //     description,
+      //     price,
+      //   },
+      //   isAuthenticated: req.session.isLoggedIn,
+      //   errorMessage: "Database operation failed",
+      //   validationErrors: [],
+      // });
+      res.redirect("/500");
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {

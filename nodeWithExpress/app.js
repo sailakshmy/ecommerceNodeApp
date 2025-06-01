@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-
+app.use(errorController.get500);
 app.use(errorController.get404);
 
 mongoose
