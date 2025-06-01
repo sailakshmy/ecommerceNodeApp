@@ -326,10 +326,10 @@ exports.postNewPassword = (req, res, next) => {
     .then(() => {
       res.redirect("/login");
     })
-    .catch((err) => {
+    .catch((e) => {
       console.log(
         "Error while fetching user with id, resetToken and resetTokenExpiration in postnewPassword",
-        err
+        e
       );
       const err = new Error(e);
       err.httpStatusCode = 500;
