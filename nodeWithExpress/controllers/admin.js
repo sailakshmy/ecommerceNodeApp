@@ -23,7 +23,7 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   // This will cater only if the request type is POST
   const { title, image, description, price } = req.body;
-  console.log("user", req.user);
+  console.log("user", req.user, req.file, image);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
