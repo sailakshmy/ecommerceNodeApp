@@ -52,16 +52,30 @@ exports.getProduct = (req, res, next) => {
 
 exports.getIndex = (req, res, next) => {
   const pageNumber = req.query.page;
-  // Product.fetchAll()
+  let totalItems;
+
   Product.find()
-    .skip((pageNumber - 1) * ITEMS_PER_PAGE)
-    .limit(ITEMS_PER_PAGE)
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((pageNumber - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
+    // Product.fetchAll()
+
     .then((products) => {
       console.log("res from getindex", products);
       res.render("shop/index", {
         prods: products,
         docTitle: "Shop",
         path: "/",
+        totalProducts: totalItems,
+        hasNextPage: totalItems > ITEMS_PER_PAGE * pageNumber,
+        hasPreviousPage: pageNumber > 1,
+        nextPage: pageNumber + 1,
+        previousPage: pageNumber - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((e) => {
