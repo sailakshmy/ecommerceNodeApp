@@ -3,6 +3,7 @@ const Product = require("../models/product");
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 
+const deleteFileHelper = require("../utils/file").deleteFile;
 exports.getAddProduct = (req, res, next) => {
   // console.log("In the middleware for add products");
   // res.sendFile(path.join(rootDir, "views", "add-product.html"));
@@ -183,7 +184,10 @@ exports.postEditProduct = (req, res, next) => {
       }
       product.title = title;
       product.description = description;
-      if (image) product.imageUrl = image.path;
+      if (image) {
+        deleteFileHelper(product.imageUrl);
+        product.imageUrl = image.path;
+      }
       product.price = price;
       return product.save().then(() => {
         res.redirect("/admin/products");
@@ -199,12 +203,22 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-  const { productId } = req.body;
+  const { productId, imageUrl } = req.body;
   // Product.deleteById(productId)
-  Product.deleteOne({ _id: productId, userId: req.user._id })
+  Product.findById(productId)
+    .then((product) => {
+      if (!product) {
+        return next(new Error("Product not found!"));
+      }
+      deleteFileHelper(product.imageUrl);
+      return Product.deleteOne({ _id: productId, userId: req.user._id });
+    })
     //findByIdAndDelete(productId)
     .then(() => res.redirect("/admin/products"))
-    .catch((e) => console.log("err while deleting product from controller", e));
+    .catch((e) => {
+      console.log("err while deleting product from controller", e);
+      next(e);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
