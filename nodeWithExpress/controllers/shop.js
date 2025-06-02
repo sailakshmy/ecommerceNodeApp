@@ -221,17 +221,21 @@ exports.getInvoice = (req, res, next) => {
       }
       const invoiceName = `Invoice-${orderId}.pdf`;
       const invoicePath = path.join("data", "invoices", invoiceName);
-      fs.readFile(invoicePath, (err, data) => {
-        if (err) {
-          next(err);
-        }
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-          "Content-Disposition",
-          `inline; filename="${invoiceName}"`
-        );
-        res.send(data);
-      });
+      // fs.readFile(invoicePath, (err, data) => {
+      //   if (err) {
+      //     next(err);
+      //   }
+      //   res.setHeader("Content-Type", "application/pdf");
+      //   res.setHeader(
+      //     "Content-Disposition",
+      //     `inline; filename="${invoiceName}"`
+      //   );
+      //   res.send(data);
+      // });
+      const file = fs.createReadStream(invoicePath);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
+      file.pipe(res);
     })
     .catch((err) => {
       console.log("error while fetching order in getInvoice", err);
