@@ -9,14 +9,32 @@ const Order = require("../models/order");
 const ITEMS_PER_PAGE = 1;
 
 exports.getProducts = (req, res, next) => {
+  let pageNumber = 1;
+  if (req.query.page) pageNumber = +req.query.page;
+  let totalItems;
+
   Product.find()
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((pageNumber - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     // Product.fetchAll()
+
     .then((products) => {
       console.log("products from getProducts", products);
       res.render("shop/product-list", {
         prods: products,
         docTitle: "All products",
         path: "/products",
+        currentPage: pageNumber,
+        hasNextPage: totalItems > ITEMS_PER_PAGE * pageNumber,
+        hasPreviousPage: pageNumber > 1,
+        nextPage: pageNumber + 1,
+        previousPage: pageNumber - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
         hasProducts: products.length > 0,
         isAuthenticated: req.session.isLoggedIn,
       });
