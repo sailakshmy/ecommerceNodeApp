@@ -148,7 +148,7 @@ exports.getCheckout = (req, res, next) => {
 exports.postOrder = (req, res, next) => {
   // req.user
   req.user
-    .populate("cart.items.productId", "title")
+    .populate("cart.items.productId")
     .then((user) => {
       console.log("Products in postOrder", user, user.cart.items);
       const productsFromCart = user.cart.items.map((item) => {
@@ -229,8 +229,22 @@ exports.getInvoice = (req, res, next) => {
       pdfDoc.pipe(fs.createWriteStream(invoicePath));
       pdfDoc.pipe(res);
 
-      pdfDoc.text("Hello World!");
-
+      // pdfDoc.text("Hello World!");
+      pdfDoc.fontSize(26).text("Invoice", {
+        underline: true,
+      });
+      pdfDoc.text("------");
+      let totalPrice = 0;
+      order.products.forEach((product) => {
+        totalPrice += product.product.price * product.quantity;
+        pdfDoc
+          .fontSize(14)
+          .text(
+            `${product.product.title}-${product.quantity} x $${product.product.price}`
+          );
+      });
+      pdfDoc.text("------");
+      pdfDoc.fontSize(18).text(`Total price = $${totalPrice}`);
       pdfDoc.end();
       // fs.readFile(invoicePath, (err, data) => {
       //   if (err) {
