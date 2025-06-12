@@ -202,8 +202,9 @@ exports.postEditProduct = (req, res, next) => {
     });
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-  const { productId, imageUrl } = req.body;
+exports.deleteProduct = (req, res, next) => {
+  // const { productId, imageUrl } = req.body;
+  const { productId } = req.params;
   // Product.deleteById(productId)
   Product.findById(productId)
     .then((product) => {
@@ -214,10 +215,14 @@ exports.postDeleteProduct = (req, res, next) => {
       return Product.deleteOne({ _id: productId, userId: req.user._id });
     })
     //findByIdAndDelete(productId)
-    .then(() => res.redirect("/admin/products"))
+    .then(() => {
+      res.status(200).json({ message: "Success!" });
+      //  res.redirect("/admin/products")
+    })
     .catch((e) => {
       console.log("err while deleting product from controller", e);
-      next(e);
+      res.status(500).json({ message: "Failed to delete product!" });
+      // next(e);
     });
 };
 

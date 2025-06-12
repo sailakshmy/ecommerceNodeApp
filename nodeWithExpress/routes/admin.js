@@ -38,10 +38,16 @@ router.post(
   adminController.postEditProduct
 );
 
-router.post(
-  "/delete-product",
+// router.post(
+//   "/delete-product",
+//   isAuthMiddleware,
+//   adminController.postDeleteProduct
+// );
+
+router.delete(
+  "/product/:productId",
   isAuthMiddleware,
-  adminController.postDeleteProduct
+  adminController.deleteProduct
 );
 
 router.get("/products", isAuthMiddleware, adminController.getProducts);
