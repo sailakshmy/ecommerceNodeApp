@@ -25,5 +25,5 @@ router.get("/orders", isAuthMiddleware, shopController.getOrders);
 
 router.get("/orders/:orderId", isAuthMiddleware, shopController.getInvoice);
 router.post("/create-order", isAuthMiddleware, shopController.postOrder);
-
+router.get("/checkout", isAuthMiddleware, shopController.getCheckout);
 module.exports = router;
