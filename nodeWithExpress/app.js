@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -61,6 +62,8 @@ const fileFilter = (req, file, cb) => {
 };
 
 const csrfProtection = csrf();
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
 
 app.set("view engine", "ejs");
 
@@ -182,6 +185,9 @@ mongoose
     // });
 
     app.listen(process.env.PORT || 3000);
+    // https
+    //   .createServer({ key: privateKey, cert: certificate }, app)
+    //   .listen(process.env.PORT || 3000);
   })
   .catch((e) => console.log("error while connecting to mongoose", e));
 
