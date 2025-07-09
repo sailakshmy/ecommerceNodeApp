@@ -16,6 +16,7 @@ const flash = require("connect-flash");
 const dotenv = require("dotenv");
 const multer = require("multer");
 const helmet = require("helmet");
+const compression = require("compression");
 
 const User = require("./models/user");
 
@@ -63,6 +64,7 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(helmet());
+app.use(compression());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter }).single("image"));
