@@ -15,6 +15,7 @@ const csrf = require("csurf");
 const flash = require("connect-flash");
 const dotenv = require("dotenv");
 const multer = require("multer");
+const helmet = require("helmet");
 
 const User = require("./models/user");
 
@@ -60,6 +61,8 @@ const csrfProtection = csrf();
 app.set("view engine", "ejs");
 
 app.set("views", "views");
+
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter }).single("image"));
