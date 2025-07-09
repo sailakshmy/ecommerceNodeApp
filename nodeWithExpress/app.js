@@ -27,8 +27,7 @@ const User = require("./models/user");
 // const Order = require("./models/order");
 // const OrderItem = require("./models/order-item");
 
-const uri =
-  "mongodb+srv://Groot:IAmGroot@cluster0.2ehxgue.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.2ehxgue.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority&appName=Cluster0`;
 
 const app = express();
 dotenv.config();
@@ -162,7 +161,7 @@ mongoose
     //   }
     // });
 
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((e) => console.log("error while connecting to mongoose", e));
 

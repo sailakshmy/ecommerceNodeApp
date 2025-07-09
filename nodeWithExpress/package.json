@@ -4,8 +4,9 @@
   "description": "Node with Express",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "MONGODB_USER=Groot MONGODB_PASSWORD=IAmGroot MONGODB_DATABASE=shop STRIPE_KEY=sk_test_51RZr4EGgako5pZlFamKWz8ZxX9WrFtUf74rNw3EHuYGAavkJrW7SPnHWaCTPfFDzYN1iml48Lqf3H2Pqrk16vOH200G5hx3D6I node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon app.js"
   },
   "author": "Sai Lakshmy",
   "license": "ISC",

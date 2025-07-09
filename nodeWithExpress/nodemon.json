@@ -1,0 +1,8 @@
+{
+  "env": {
+    "MONGODB_USER": "Groot",
+    "MONGODB_PASSWORD": "IAmGroot",
+    "MONGODB_DATABASE": "shop",
+    "STRIPE_KEY": "sk_test_51RZr4EGgako5pZlFamKWz8ZxX9WrFtUf74rNw3EHuYGAavkJrW7SPnHWaCTPfFDzYN1iml48Lqf3H2Pqrk16vOH200G5hx3D6I"
+  }
+}
